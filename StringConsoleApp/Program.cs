@@ -6,7 +6,8 @@ namespace StringAppProgram
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to the StringConsoleApp");
+            
+            Console.WriteLine("\n\nWelcome to the StringConsoleApp");
             Console.WriteLine("============================\n");
             StringConsoleApp stringConsoleApp = new StringConsoleApp();
             runMenu();
@@ -30,7 +31,6 @@ namespace StringAppProgram
 
             static void DisplayMenu()
             {
-                
                 Console.WriteLine("==== Select an option: ==== \n");
                 Console.WriteLine("a - Convert a string to uppercase");
                 Console.WriteLine("b - Reverse a string");
@@ -41,6 +41,7 @@ namespace StringAppProgram
                 Console.WriteLine("g - Find the longest and shortest words in a string");
                 Console.WriteLine("h - Find the most frequent word in a string");
                 Console.WriteLine("z - Perform multiple operations on the same string");
+                Console.WriteLine("q - Check if a string has a valid name format");
 
                 Console.WriteLine("x - Quit");
             }

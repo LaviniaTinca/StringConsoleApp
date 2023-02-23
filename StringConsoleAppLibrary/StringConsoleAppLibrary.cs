@@ -33,7 +33,7 @@ namespace StringConsoleAppLibrary
                     Console.WriteLine("The given string has "+ ArrayOfWords(s).Length + " words.");
                     break;
                 case "e":
-                    Console.WriteLine("The string in title case is: " + (new CultureInfo("en-US", false).TextInfo).ToTitleCase(s));//ConvertStringToTitleCase(s));
+                    Console.WriteLine("The string in title case is: " + (new CultureInfo("en-US", false).TextInfo).ToTitleCase(s));
                     break;
                 case "f":
                     bool palindrome = IsPalindrome(s);
@@ -219,12 +219,28 @@ namespace StringConsoleAppLibrary
          */
         private static bool IsPalindrome(string s)
         {
-            string reversed = ReverseAString(s);
+            string[] words = s.Trim().Split(' ');
+            string str = String.Empty;
+            string reversed = String.Empty;
             bool palindrome = true;
-            if (s != reversed)
+            try
             {
-                palindrome = false;
+                for (int i = 0; i < words.Length; i++)
+                {
+                    str = str + words[i];
+                }
+                reversed = ReverseAString(str);
+
+                if (str != reversed)
+                {
+                    palindrome = false;
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            
             return palindrome;
         }
 
