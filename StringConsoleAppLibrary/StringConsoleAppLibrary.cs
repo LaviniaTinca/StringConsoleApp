@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using System.Globalization;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace StringConsoleAppLibrary
 {
@@ -7,126 +7,281 @@ namespace StringConsoleAppLibrary
     {
         public StringConsoleApp()
         {
-            StreamWriter logFile = File.CreateText("stringConsoleApp.log");
-            Trace.Listeners.Add(new TextWriterTraceListener(logFile));
-            Trace.AutoFlush = true;
-            Trace.WriteLine("Starting StringConsoleApp Log");
-            Trace.WriteLine(String.Format("Started {0}", System.DateTime.Now.ToString()));
         }
 
-        public string Operation(string option)
+        public void Operation(string option)
         {
-            string result = "";
-            int res = 0;
+            Console.WriteLine("Type a string, and then press Enter! ");
+            string s = ReadString();
+            SwitchOption(option, s); 
+        }
+
+        void SwitchOption(string option, string s)
+        {
             switch (option)
             {
                 case "a":
-                    result = convertStringToUppercase();
-                    Console.WriteLine(result);  
+                    Console.WriteLine("The given string to uppercase is: " + s.ToUpper());
                     break;
                 case "b":
-                    result = reverseAString();
-                    Console.WriteLine(result);
+                    Console.WriteLine("The given string reversed is: " + ReverseAString(s));
                     break;
                 case "c":
-                    res = numberOfVowels();
-                    Console.WriteLine(res);
-                    Trace.WriteLine(String.Format("the given string has {0} vowels!", res));
+                    Console.WriteLine("The given string has: " + NumberOfVowels(s) + " vowels.");
                     break;
                 case "d":
-                    //Count the number of words in a string
-                    res = numberOfWords();
-                    Console.WriteLine(res);
-                    Trace.WriteLine(String.Format("the given string has {0} words!", res));
+                    Console.WriteLine("The given string has "+ ArrayOfWords(s).Length + " words.");
                     break;
                 case "e":
-                    // Convert a string to title case
-                    string s = ReadString();
-                    result = convertStringToTitleCase(s);
-                    //Trace.WriteLine(String.Format("The string {0} converted to Title Case is: {1} ", s, result));
-                    Console.WriteLine(result);
+                    Console.WriteLine("The string in title case is: " + (new CultureInfo("en-US", false).TextInfo).ToTitleCase(s));//ConvertStringToTitleCase(s));
+                    break;
+                case "f":
+                    bool palindrome = IsPalindrome(s);
+                    if (palindrome)
+                    {
+                        Console.WriteLine("The given string is a palindrome");
+                    }
+                    else Console.WriteLine("The given string is NOT a palindrome");
+
+                    break;
+                case "g":
+                    string[] r = LongestAndShortestWord(s);
+                    Console.WriteLine(String.Format("The longest word in the string is: {0}, and the shorter is: {1} ", r[0],  r[1]));
+                    break;
+                case "h":
+                    Console.WriteLine("The most frequent word in the string is: " + MostFrequentWord(s));
+                    break;
+                case "z":
+                    Console.WriteLine("Enter the operations you want to perform: ");
+                    string operations = ReadString();
+                    
+                    foreach (var item in operations.Trim())
+                    {
+                        SwitchOption(item.ToString(), s);
+                    }
+
+                    break;
+                case "q":
+                    bool valid = IsValidName(s);
+                    if (valid)
+                    {
+                        Console.WriteLine("The given string is a valid name");
+                    }
+                    else Console.WriteLine("The given string is NOT a valid name");
+
                     break;
                 case "x":
                     break;
-                // Return text for an incorrect option entry.
+
                 default:
-                    Console.WriteLine("Incorrect Option. Please retry!");
                     break;
             }
-            return result;
         }
 
-        static string ReadString()
+        /*checks if a string has the format for a valid name
+         * returns: bool
+         */
+        private static bool IsValidName(string s)
         {
-            Console.WriteLine("Type a string, and then press Enter: ");
-            string result = "";
-            result = Console.ReadLine();
-            return result;
-        }
-
-        string convertStringToUppercase()
-        {
-            string s = ReadString();
-           
-            return s.ToUpper();
-        }
-
-        string reverseAString()
-        {
-            string s = ReadString();
-            string reversedString = String.Empty;
-            char[] array = s.ToCharArray();
-            for (int i = array.Length - 1; i >= 0; i--)
+            bool valid = false;
+            try
             {
-                reversedString += array[i];
+                valid = Regex.IsMatch(s, (@"^([A-Z][a-z]{1,29}$"));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return valid;
+            
+        }
+
+        public string ReadString()
+        {
+            string s = "";
+            try
+            {
+                while (true)
+                {
+                    s = Console.ReadLine();
+                    if (s != null) break;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+            }
+            return s;
+        }
+
+        /* reverse a given string
+         * string s - the given string
+         * return: - the string reversed
+         */
+        private static string ReverseAString(string s)
+        {
+            string reversedString = String.Empty;
+            try
+            {
+                char[] array = s.ToCharArray();
+                for (int i = array.Length - 1; i >= 0; i--)
+                {
+                    reversedString += array[i];
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
 
-            //return (string) s.Reverse();
             return reversedString;
         }
 
-        int numberOfVowels()
+        /*counts the number of vowels in a given string
+         * string s - the given string
+         * return: - the number of vowels
+         */
+        private static int NumberOfVowels(string s)
         {
-            string s = ReadString();
             int numberOfVowels = 0;
             char[] vowels = { 'a', 'e', 'i', 'o', 'u' };
-            for (int i = 0; i < s.Length; i++)
+            try
             {
-                foreach (var item in vowels)
+                for (int i = 0; i < s.Length; i++)
                 {
-                    if (s[i] == item)
+                    foreach (var item in vowels)
                     {
-                        numberOfVowels++;
+                        if (s[i] == item)
+                        {
+                            numberOfVowels++;
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);     
+            }
+       
             return numberOfVowels;
         }
 
-        int numberOfWords()
+        /* counts the number of words in a given string
+         * string s - the given string
+         * return: - the number of vowels
+         */
+        static int NumberOfWords(string s)
         {
-            string s = ReadString();
             int numberOfWords = 0;
-            for (int i = 0; i < s.Length-1; i++)
+            try
             {
-                if ((s[i] == ' ') & (s[i+1] == ' '))
+                for (int i = 0; i < s.Length - 1; i++)
                 {
-                    i++;
+                    if ((s[i] == ' ') & (s[i + 1] == ' '))
+                    {
+                        i++;
+                    }
+                    else if ((i != 0) & (s[i] == ' '))
+                    {
+                        numberOfWords++;
+                    }
                 }
-                else if ((i!=0) & (s[i] == ' '))
-                {
-                    numberOfWords++;
-                }                        
+                numberOfWords++;
             }
-            numberOfWords++;
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            
             return numberOfWords;
         }
 
-        string convertStringToTitleCase(string s)
+        static bool IsPalindrome2(string s)
         {
-            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+            //string s = ReadString();
+            bool palindrome = true;
+            int j = s.Length - 1;
+            for (int i = 0; i < s.Length / 2;  i++)
+            {
+                if (s[i] != s[j])
+                {
+                    palindrome = false;
+                }
+                j--;
+            }
+            
+            return palindrome;
+        }
 
-            return textInfo.ToTitleCase(s);
+        /*checks if a given string is a palindrome or not
+         * returns: bool (true or false)
+         */
+        private static bool IsPalindrome(string s)
+        {
+            string reversed = ReverseAString(s);
+            bool palindrome = true;
+            if (s != reversed)
+            {
+                palindrome = false;
+            }
+            return palindrome;
+        }
+
+        /*determines the longest and the shortest word in a given string
+         * string s: the given string
+         * returns: an array with two values: [longest word, shortest word]
+         */
+        private static string[] LongestAndShortestWord(string s)
+        {
+            string[] words = ArrayOfWords(s);
+            string longest = String.Empty;
+            string shortest = s;
+            try
+            {
+                foreach (var item in words)
+                {
+                    if (item.Length > longest.Length)
+                    {
+                        longest = item;
+                    }
+                    if (item.Length < shortest.Length)
+                    {
+                        shortest = item;
+                    }
+                }   
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            string[] result = { longest, shortest };
+            return result;
+        }
+
+        /*creates an array with the words from the given string
+         * string s: the given string
+         * return: an array with the words
+         */
+        private static string[] ArrayOfWords(string s)
+        {
+            string[] words = s.Split(' ');
+            
+            return words;
+        }
+
+        /*determines the most frequent word in a given string
+         * string s: the given string
+         * returns: string 
+         */
+        private string MostFrequentWord(string s)
+        {
+            var results = s.Split(' ')
+                              .GroupBy(x => x)
+                              .Select(x => new { Count = x.Count(), Word = x.Key })
+                              .OrderByDescending(x => x.Count);
+            return results.First().Word;
         }
     }
 }

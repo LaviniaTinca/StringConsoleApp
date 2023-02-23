@@ -1,8 +1,5 @@
 ﻿using StringConsoleAppLibrary;
 
-using System;
-using System.Collections.Generic;
-
 namespace StringAppProgram
 {
     class Program
@@ -21,17 +18,15 @@ namespace StringAppProgram
                 {
                     DisplayMenu();
                     Console.WriteLine("==== Select an option: ==== \n");
-                    string option = "";
-                    option = Console.ReadLine();                  
+                    string option = stringConsoleApp.ReadString();
                     stringConsoleApp.Operation(option);
-
+                 
                     Console.WriteLine("------------------------\n");
                     if (option == "x") endApp = true;
 
-                    Console.WriteLine("\n"); // Friendly linespacing.
+                    Console.WriteLine("\n");
                 }
             }
-            
 
             static void DisplayMenu()
             {
@@ -42,6 +37,10 @@ namespace StringAppProgram
                 Console.WriteLine("c - Count the number of vowels in a string");
                 Console.WriteLine("d - Count the number of words in a string");
                 Console.WriteLine("e - Convert a string to title case");
+                Console.WriteLine("f - Check if a string is a palindrome");
+                Console.WriteLine("g - Find the longest and shortest words in a string");
+                Console.WriteLine("h - Find the most frequent word in a string");
+                Console.WriteLine("z - Perform multiple operations on the same string");
 
                 Console.WriteLine("x - Quit");
             }
